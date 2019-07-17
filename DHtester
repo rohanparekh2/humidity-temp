@@ -1,0 +1,45 @@
+// Example testing sketch for various DHT humidity/temperature sensors
+// Written by ladyada, public domain
+
+#include "DHT.h"
+
+#define DHTPIN 2     // what pin we're connected to
+
+// Uncomment whatever type you're using!
+//#define DHTTYPE DHT11   // DHT 11 
+#define DHTTYPE DHT22   // DHT 22  (AM2302)
+//#define DHTTYPE DHT21   // DHT 21 (AM2301)
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
+// Initialize DHT sensor for normal 16mhz Arduino
+DHT dht(DHTPIN, DHTTYPE);
+
+LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // Set the LCD I2C address, if it's not working try 0x27.
+//LiquidCrystal_I2C lcd(0x27,16,2); 
+void setup() {
+  lcd.begin(16,2);
+  lcd.backlight();
+
+
+  dht.begin();
+}
+
+void loop() {
+  // Wait a few seconds between measurements.
+  delay(2000);
+  lcd.setCursor(0,0);
+  // Reading temperature or humidity takes about 250 milliseconds!
+  // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
+  float h = dht.readHumidity();
+  // Read temperature as Fahrenheit
+  float f = dht.readTemperature(true);
+
+  lcd.setCursor(0,0);
+  lcd.print("Humid: "); 
+  lcd.print(h);
+  lcd.print(" %");
+  lcd.setCursor(0,1);
+  lcd.print("Temp: "); 
+  lcd.print(f);
+  lcd.print(" F");
+}
